@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NIROFAN INDUSTRIES – Track Your Complaint</title>
+<style>
+:root{--bg:#f3f5f4;--card:#fff;--ink:#16211f;--muted:#5b6b67;--line:#cfd8d5;--accent:#0f6b5c;--accent-ink:#fff;--err:#b3261e;--ok:#e6f3ef;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--bg:#121816;--card:#1b2421;--ink:#e7efec;--muted:#9bada8;--line:#334541;--accent:#4fc3ac;--accent-ink:#0a1512;--err:#ff8a80;--ok:#1d3a33}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.5rem;line-height:1.25;margin:8px 0 4px}
+.sub{color:var(--muted);margin:0 0 18px}
+a{color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 20px;margin-bottom:16px}
+label{display:block;font-weight:600;margin:0 0 6px}
+.bar{display:flex;gap:10px}
+input{flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;text-transform:uppercase}
+input:focus,button:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+button{font:inherit;font-weight:600;border-radius:8px;padding:10px 20px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink)}
+button:disabled{opacity:.6;cursor:wait}
+.msg{color:var(--err);margin:10px 0 0;min-height:1em}
+#res{display:none}
+.id{font-size:1.15rem;font-weight:700;margin:0 0 4px}
+.badge{display:inline-block;font-weight:700;padding:4px 12px;border-radius:999px;background:var(--ok);color:var(--accent);margin:6px 0 14px}
+.badge.hold{color:var(--err)}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0 0 18px;font-size:.95rem}
+.meta dt{color:var(--muted)}
+.meta dd{margin:0}
+ol.tl{list-style:none;margin:0;padding:0;position:relative}
+ol.tl li{position:relative;padding:0 0 18px 28px}
+ol.tl li:last-child{padding-bottom:0}
+ol.tl li::before{content:"";position:absolute;left:5px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--accent)}
+ol.tl li:not(:last-child)::after{content:"";position:absolute;left:10px;top:20px;bottom:-2px;width:2px;background:var(--line)}
+ol.tl li:last-child::before{box-shadow:0 0 0 4px var(--ok)}
+ol.tl b{display:block}
+ol.tl span{color:var(--muted);font-size:.9rem}
+h2{font-size:1.05rem;margin:0 0 12px}
+</style>
+</head>
+<body>
+<main>
+<h1>NIROFAN INDUSTRIES<br>Track Your Complaint</h1>
+<p class="sub">Enter the ticket ID you received when you registered your complaint.</p>
+
+<form class="card" id="f" novalidate>
+<label for="tid">Ticket ID</label>
+<div class="bar">
+<input id="tid" type="text" placeholder="NRO-2026-0001" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false">
+<button id="go" type="submit">Check status</button>
+</div>
+<p class="msg" id="msg" role="alert"></p>
+</form>
+
+<section class="card" id="res" aria-live="polite">
+<p class="id" id="rid"></p>
+<span class="badge" id="rst"></span>
+<dl class="meta">
+<dt>Product</dt><dd id="rcat"></dd>
+<dt>Complaint type</dt><dd id="rtype"></dd>
+<dt>Registered on</dt><dd id="rreg"></dd>
+<dt>Last updated</dt><dd id="rupd"></dd>
+<dt id="rdone-t" style="display:none">Completed on</dt><dd id="rdone" style="display:none"></dd>
+</dl>
+<h2>Progress</h2>
+<ol class="tl" id="tl"></ol>
+</section>
+
+<p class="sub">Need to register a new complaint? <a href="/complaint">Open the complaint form</a>.</p>
+</main>
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+function fmt(iso){
+if(!iso)return "-";
+var d=new Date(iso);
+if(isNaN(d))return "-";
+return d.toLocaleString("en-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
+}
+function look(id){
+var m=$("msg");m.textContent="";$("res").style.display="none";
+id=id.trim().toUpperCase();
+if(!/^NRO-\d{4}-\d{4,6}$/.test(id)){m.textContent="Please enter a valid ticket ID, for example NRO-2026-0001.";return;}
+$("go").disabled=true;$("go").textContent="Checking\u2026";
+fetch("/api/public/track/"+encodeURIComponent(id),{headers:{"Accept":"application/json"}})
+.then(function(r){return r.json().catch(function(){return {};}).then(function(j){return {ok:r.ok,j:j};});})
+.then(function(o){
+if(!o.ok)throw new Error(o.j.error||"Could not check the status. Please try again.");
+var c=o.j;
+$("rid").textContent="Ticket "+c.complaintId;
+$("rst").textContent=c.statusLabel;
+$("rst").className="badge"+(c.status==="On Hold"?" hold":"");
+$("rcat").textContent=c.category||"-";
+$("rtype").textContent=c.complaintType||"-";
+$("rreg").textContent=fmt(c.registeredOn);
+$("rupd").textContent=fmt(c.lastUpdated);
+var done=c.completedOn&&(c.status==="Completed"||c.status==="Resolved"||c.status==="Closed");
+$("rdone-t").style.display=done?"":"none";$("rdone").style.display=done?"":"none";
+if(done)$("rdone").textContent=fmt(c.completedOn);
+var tl=$("tl");tl.innerHTML="";
+c.timeline.forEach(function(t){
+var li=document.createElement("li"),b=document.createElement("b"),s=document.createElement("span");
+b.textContent=t.label;s.textContent=fmt(t.at);
+li.appendChild(b);li.appendChild(s);tl.appendChild(li);
+});
+$("res").style.display="block";
+}).catch(function(e){
+m.textContent=e.message==="Failed to fetch"?"No internet connection. Please try again.":e.message;
+}).then(function(){$("go").disabled=false;$("go").textContent="Check status";});
+}
+$("f").addEventListener("submit",function(e){e.preventDefault();look($("tid").value);});
+var q=new URLSearchParams(location.search).get("id");
+if(q){$("tid").value=q.slice(0,20).toUpperCase();look(q.slice(0,20));}
+})();
+</script>
+</body>
+</html>

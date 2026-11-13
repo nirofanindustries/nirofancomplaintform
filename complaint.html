@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NIROFAN INDUSTRIES – Customer Complaint &amp; Service Request Form</title>
+<style>
+:root{--bg:#f3f5f4;--card:#fff;--ink:#16211f;--muted:#5b6b67;--line:#cfd8d5;--accent:#0f6b5c;--accent-ink:#fff;--err:#b3261e;--ok:#e6f3ef;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--bg:#121816;--card:#1b2421;--ink:#e7efec;--muted:#9bada8;--line:#334541;--accent:#4fc3ac;--accent-ink:#0a1512;--err:#ff8a80;--ok:#1d3a33}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.5rem;line-height:1.25;margin:8px 0 4px}
+.sub{color:var(--muted);margin:0 0 18px}
+.progress{display:flex;gap:6px;margin:0 0 6px}
+.progress i{flex:1;height:5px;border-radius:3px;background:var(--line)}
+.progress i.on{background:var(--accent)}
+.step{font-size:.9rem;color:var(--muted);margin:0 0 14px}
+fieldset{margin:0;padding:22px 20px;background:var(--card);border-radius:12px;border:1px solid var(--line);display:none}
+fieldset.show{display:block}
+legend{padding:0;font-size:1.2rem;font-weight:650;float:left;width:100%;margin-bottom:6px}
+legend+*{clear:both}
+.hint{color:var(--muted);font-size:.95rem;margin:0 0 16px}
+label{display:block;font-weight:600;margin:16px 0 6px}
+.req{color:var(--err);margin-left:3px}
+input[type=text],input[type=tel],input[type=email],input[type=date],input[type=file],select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+textarea{min-height:130px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.consent{display:flex;gap:10px;align-items:flex-start;margin-top:22px;padding:14px;background:var(--ok);border-radius:8px;font-weight:400}
+.consent input{margin-top:4px;width:18px;height:18px;flex:none;accent-color:var(--accent)}
+.consent span{font-size:.95rem}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:22px}
+button{font:inherit;font-weight:600;border-radius:8px;padding:11px 20px;cursor:pointer;border:1px solid var(--accent)}
+button:disabled{opacity:.6;cursor:wait}
+.primary{background:var(--accent);color:var(--accent-ink)}
+.ghost{background:transparent;color:var(--accent)}
+.invalid{border-color:var(--err)!important}
+.msg{color:var(--err);font-size:.9rem;margin:8px 0 0;min-height:1em}
+.thumb{display:none;max-width:140px;max-height:100px;margin-top:8px;border-radius:6px;border:1px solid var(--line)}
+.hp{position:absolute;left:-9999px;height:0;width:0;overflow:hidden}
+#done{display:none;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 20px}
+#done h2{margin:0 0 8px;font-size:1.3rem}
+a{color:var(--accent)}
+.refno{font-size:1.4rem;font-weight:700;color:var(--accent);margin:8px 0}
+</style>
+</head>
+<body>
+<main>
+<h1>NIROFAN INDUSTRIES<br>Customer Complaint &amp; Service Request Form</h1>
+<p class="sub">Fill in the details below. Fields marked with * are required. Already registered? <a href="/track">Track your complaint status</a>.</p>
+<div class="progress" id="bars"><i></i><i></i><i></i><i></i></div>
+<p class="step" id="stepTxt">Section 1 of 4</p>
+
+<form id="f" novalidate autocomplete="on">
+<div class="hp" aria-hidden="true"><label>Website<input type="text" id="website" tabindex="-1" autocomplete="off"></label></div>
+
+<fieldset class="show">
+<legend>1. Customer Details</legend>
+<label for="name">Customer Full Name<span class="req">*</span></label>
+<input id="name" type="text" required maxlength="100" autocomplete="name">
+<div class="row">
+<div><label for="mobile">Mobile Number<span class="req">*</span></label>
+<input id="mobile" type="tel" required inputmode="numeric" maxlength="14" autocomplete="tel"></div>
+<div><label for="wa">WhatsApp Number</label>
+<input id="wa" type="tel" inputmode="numeric" maxlength="14"></div>
+</div>
+<label for="email">Email<span class="req">*</span></label>
+<input id="email" type="email" required maxlength="120" autocomplete="email">
+<label for="addr">Address<span class="req">*</span></label>
+<textarea id="addr" required maxlength="300" style="min-height:80px" autocomplete="street-address"></textarea>
+<div class="row">
+<div><label for="city">City<span class="req">*</span></label>
+<input id="city" type="text" required maxlength="80" autocomplete="address-level2"></div>
+<div><label for="state">State<span class="req">*</span></label>
+<select id="state" required><option value="">Choose</option></select></div>
+</div>
+<label for="pin">PIN Code<span class="req">*</span></label>
+<input id="pin" type="text" required inputmode="numeric" maxlength="6" autocomplete="postal-code">
+<p class="msg" id="m0"></p>
+</fieldset>
+
+<fieldset>
+<legend>2. Product Details</legend>
+<p class="hint">Please provide the details of the product related to your complaint, including Product Category, Warranty date.</p>
+<label for="cat">Product Category<span class="req">*</span></label>
+<select id="cat" required><option value="">Choose</option><option>Ceiling Fan</option><option>Air Cooler</option><option>Exhaust Fan</option><option>Other</option></select>
+<label for="war">Warranty date<span class="req">*</span></label>
+<input id="war" type="date" required>
+<p class="msg" id="m1"></p>
+</fieldset>
+
+<fieldset>
+<legend>3. Complaint Details</legend>
+<p class="hint">Please describe the issue or complaint in detail. Mention the problem faced, date of occurrence, and any other relevant information. Our team will review your complaint and provide the necessary assistance.</p>
+<label for="ctype">Complaint Type<span class="req">*</span></label>
+<select id="ctype" required><option value="">Choose</option><option>Not Working</option><option>Speed Issue</option><option>Noise Problem</option><option>Wobbling</option><option>Regulator / Remote Issue</option><option>Physical Damage</option><option>Other</option></select>
+<label for="desc">Complaint Description<span class="req">*</span></label>
+<textarea id="desc" required maxlength="2000"></textarea>
+<p class="msg" id="m2"></p>
+</fieldset>
+
+<fieldset>
+<legend>4. Upload Documents</legend>
+<p class="hint">Please upload the necessary supporting documents related to your complaint, such as Purchase Invoice, Warranty Card, Product Images, Service Report, or any other relevant documents.</p>
+<label for="pp">Product Photo<span class="req">*</span></label>
+<input id="pp" type="file" accept="image/*" required>
+<img class="thumb" id="ppT" alt="Product photo preview">
+<label for="wc">Warranty Card Photo<span class="req">*</span></label>
+<input id="wc" type="file" accept="image/*" required>
+<img class="thumb" id="wcT" alt="Warranty card photo preview">
+<label class="consent" for="ok">
+<input id="ok" type="checkbox" required>
+<span><strong>Customer Consent &amp; Confirmation<span class="req">*</span></strong><br>I confirm that the information provided above is correct. I agree to the collection and use of my personal information by NIRO for complaint registration, service support and service-related updates via phone, SMS, WhatsApp or email.</span>
+</label>
+<p class="msg" id="m3"></p>
+</fieldset>
+
+<div class="nav">
+<button type="button" class="ghost" id="back" style="visibility:hidden">Back</button>
+<button type="button" class="primary" id="next">Next</button>
+</div>
+</form>
+
+<section id="done" aria-live="polite">
+<h2>Complaint submitted</h2>
+<p>Thank you. Your complaint number is:</p>
+<div class="refno" id="ref"></div>
+<p>Please note it down. Our team will contact you soon.</p>
+<p><a id="trackLink" href="/track">Track your complaint status</a></p>
+<button class="ghost" id="again" type="button">Register another complaint</button>
+</section>
+</main>
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+var states=["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Delhi","Jammu and Kashmir","Ladakh","Chandigarh","Puducherry","Other"];
+states.forEach(function(s){var o=document.createElement("option");o.textContent=s;$("state").appendChild(o);});
+
+var sets=[].slice.call(document.querySelectorAll("fieldset")),bars=[].slice.call(document.querySelectorAll("#bars i"));
+var cur=0,back=$("back"),next=$("next"),f=$("f");
+function show(n){
+cur=n;
+sets.forEach(function(s,i){s.classList.toggle("show",i===n);});
+bars.forEach(function(b,i){b.classList.toggle("on",i<=n);});
+$("stepTxt").textContent="Section "+(n+1)+" of 4";
+back.style.visibility=n?"visible":"hidden";
+next.textContent=n===3?"Submit complaint":"Next";
+window.scrollTo(0,0);
+}
+function phoneOk(v){var d=v.replace(/\D/g,"");if(d.length===12&&d.indexOf("91")===0)d=d.slice(2);if(d.length===11&&d.charAt(0)==="0")d=d.slice(1);return /^[6-9][0-9]{9}$/.test(d);}
+function valid(){
+var ok=true,first=null,msg="Please fill the highlighted fields correctly.";
+[].forEach.call(sets[cur].querySelectorAll("input:not(#website),select,textarea"),function(el){
+var good=el.checkValidity();
+if(el.id==="mobile")good=good&&phoneOk(el.value);
+if(el.id==="wa"&&el.value)good=good&&phoneOk(el.value);
+if(el.id==="pin")good=good&&/^[0-9]{6}$/.test(el.value);
+if(el.id==="desc")good=good&&el.value.trim().length>=10;
+el.classList.toggle("invalid",!good);
+if(!good){ok=false;if(!first)first=el;}
+});
+$("m"+cur).textContent=ok?"":msg;
+if(first)first.focus();
+return ok;
+}
+back.onclick=function(){if(cur)show(cur-1);};
+
+// Compress a photo in the browser so uploads stay small and fast on mobile data
+function compress(file){return new Promise(function(res,rej){
+var url=URL.createObjectURL(file),img=new Image();
+img.onload=function(){
+var max=1280,w=img.width,h=img.height,k=Math.min(1,max/Math.max(w,h));
+var c=document.createElement("canvas");c.width=Math.round(w*k);c.height=Math.round(h*k);
+c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+URL.revokeObjectURL(url);
+var q=.75,d=c.toDataURL("image/jpeg",q);
+while(d.length>780000&&q>.3){q-=.1;d=c.toDataURL("image/jpeg",q);}
+d.length>780000?rej(new Error("big")):res(d);
+};
+img.onerror=function(){URL.revokeObjectURL(url);rej(new Error("type"));};
+img.src=url;
+});}
+function preview(inp,img){inp.onchange=function(){var fl=inp.files[0];if(!fl){img.style.display="none";return;}img.src=URL.createObjectURL(fl);img.style.display="block";};}
+preview($("pp"),$("ppT"));preview($("wc"),$("wcT"));
+
+function send(){
+var m=$("m3");m.textContent="";
+next.disabled=true;next.textContent="Submitting\u2026";
+Promise.all([compress($("pp").files[0]),compress($("wc").files[0])]).then(function(p){
+var iso=$("war").value;
+return fetch("/api/public/complaints",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+name:$("name").value,mobile:$("mobile").value,whatsapp:$("wa").value,email:$("email").value,
+address:$("addr").value,city:$("city").value,state:$("state").value,pin:$("pin").value,
+category:$("cat").value,warrantyDate:iso,complaintType:$("ctype").value,description:$("desc").value,
+productPhoto:p[0],warrantyPhoto:p[1],consent:$("ok").checked,website:$("website").value
+})});
+}).then(function(r){return r.json().catch(function(){return {};}).then(function(j){return {ok:r.ok,j:j};});})
+.then(function(o){
+if(!o.ok)throw new Error(o.j.error||"Could not submit. Please try again.");
+$("ref").textContent=o.j.complaintId;$("trackLink").href="/track?id="+encodeURIComponent(o.j.complaintId);
+f.style.display="none";$("bars").style.display="none";$("stepTxt").style.display="none";
+$("done").style.display="block";window.scrollTo(0,0);
+}).catch(function(e){
+var t=e.message;
+if(t==="type")t="This photo could not be read. Please choose a JPG or PNG photo.";
+else if(t==="big")t="This photo is too large. Please choose a smaller photo.";
+else if(t==="Failed to fetch")t="No internet connection. Please try again.";
+m.textContent=t;
+}).then(function(){next.disabled=false;next.textContent="Submit complaint";});
+}
+next.onclick=function(){
+if(!valid())return;
+if(cur<3){show(cur+1);return;}
+send();
+};
+$("again").onclick=function(){
+f.reset();f.style.display="";$("bars").style.display="";$("stepTxt").style.display="";
+$("done").style.display="none";$("ppT").style.display="none";$("wcT").style.display="none";show(0);
+};
+})();
+</script>
+</body>
+</html>
